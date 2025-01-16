@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -35,7 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Sam Brannen
  * @author Michael Isvy
  */
-public interface OwnerRepository extends Repository<Owner, Integer> {
+public interface OwnerRepository extends Repository<Owner, Integer>, JpaSpecificationExecutor<Owner> {
 
 	/**
 	 * Retrieve all {@link PetType}s from the data store.
@@ -69,8 +70,9 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	/**
 	 * Save an {@link Owner} to the data store, either inserting or updating it.
 	 * @param owner the {@link Owner} to save
+	 * @return
 	 */
-	void save(Owner owner);
+	Owner save(Owner owner);
 
 	/**
 	 * Returns all the owners from data store
@@ -78,5 +80,13 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
 	@Query("SELECT owner FROM Owner owner")
 	@Transactional(readOnly = true)
 	Page<Owner> findAll(Pageable pageable);
+
+	List<Owner> findAllById(Iterable<Integer> ids);
+
+	List<Owner> saveAll(Iterable<Owner> entities);
+
+	Owner delete(Owner entity);
+
+	void deleteAllById(Iterable<Integer> ids);
 
 }
